@@ -1,8 +1,10 @@
 import { signInWithEmailAndPassword } from "firebase/auth/cordova";
 import React, { createContext, useState } from "react";
 import { auth } from "../assets/FireBase/Firebase.config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState();
   const [isDark, setIsDark] = useState(false);
   console.log(isDark);
   const toggleTheme = () => {
@@ -14,12 +16,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
   const createUser = (email, password) => {
-    return signInWithEmailAndPassword(email, password, auth);
+    return createUserWithEmailAndPassword(auth, email, password);
   };
 
   const authInfo = {
     isDark,
     toggleTheme,
+    user,
+    setUser,
     createUser,
   };
   return (

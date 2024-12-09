@@ -1,9 +1,46 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../provider/AuthProvider";
+import Swal from "sweetalert2";
 
 const Register = () => {
+  const { createUser, setUser } = useContext(AuthContext);
   const handleRegister = (e) => {
     e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const phtoUrl = form.photoURL.value;
+    const password = form.password.value;
+    console.log(name, email, phtoUrl, password);
+    const regex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    if (!regex.test(password)) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Password should contain capital,small laters,a number and min length 6 ",
+        footer: '<a href="#">Why do I have this issue?</a>',
+      });
+      return;
+    }
+    createUser(email, password)
+      .then((result) => {
+        const user = result.user;
+        setUser(user);
+        Swal.fire({
+          title: "Success",
+          text: `User has created with the name of ${name} `,
+          icon: "success",
+        });
+      })
+      .catch((error) => {
+        const errorMe = error.message;
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: errorMe,
+        });
+      });
   };
   return (
     <>
@@ -56,7 +93,7 @@ const Register = () => {
                 Photo URL
               </label>
               <input
-                type="text"
+                type="url"
                 id="photoURL"
                 name="photoURL"
                 className="w-full px-4 py-2 mt-2 text-gray-700 bg-gray-100 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
