@@ -83,7 +83,7 @@ const NavBar = () => {
             </div>
             {/* <button className="btn">Logout</button> */}
 
-            <Link to={"/auth/login"} className="btn">
+            <Link to={"/login"} className="btn">
               Login
             </Link>
             <button onClick={toggleTheme}>
